@@ -44,30 +44,33 @@ public:
     // 속성 (불, 물, 땅, 바람)	= (0, 1, 2, 3)    
        
     float compatibility(Monster& target) const { // 상성 계산 함수(데미지에 곱해짐)
-        if (target.iElement == iElement) { // 속성이 같음
-            return 1.0;
-        }
-        else if (target.iElement == FIRE) {   // 상대 속성(불은 바람에 강하나 물과 땅에는 약함)
+        if (target.iElement == iElement) return 1.0;        
+        else if (target.iElement == FIRE) // 상대 속성(불은 바람에 강하나 물과 땅에는 약함)
+        {   
             switch (iElement) { // 내 속성             
                 case WATER: return 1.5f; break;
                 case EARTH: return 1.5f; break;
                 case WIND: return 0.5f; break;
             }
         }
-        else if (target.iElement == WATER) {   // 상대 속성(물은 불에 강하나 바람에게는 약함)
+        else if (target.iElement == WATER) // 상대 속성(물은 불에 강하나 바람에게는 약함)
+        {   
             switch (iElement) { // 내 속성           
                 case FIRE: return 0.5f; break;
                 case EARTH: return 1.0f; break;
                 case WIND: return 1.5f; break;
             }
-        }else if (target.iElement == EARTH) {   // 상대 속성(땅은 불에게 강하나 바람에 약함)
+        }
+        else if (target.iElement == EARTH) // 상대 속성(땅은 불에게 강하나 바람에 약함)
+        {   
             switch (iElement) { // 내 속성              
                 case FIRE: return 0.5f; break;
                 case WATER: return 1.0f; break;
                 case WIND: return 1.5f; break;
             }
         }
-        else if (target.iElement == WIND) {   // 상대 속성(바람은 땅과 물에 강하나 불에는 약함)
+        else if (target.iElement == WIND) // 상대 속성(바람은 땅과 물에 강하나 불에는 약함)
+        {   
             switch (iElement) { // 내 속성
                 case FIRE: return 1.5f; break;
                 case WATER: return 0.5f; break;
