@@ -97,18 +97,7 @@ public:
         delete target;
         return;                
     }
-    void Print() {  // 연결 리스트 출력
-    /*if (head = nullptr) {
-            std::cout << "리스트 비어있음" << std::endl;
-            return;
-        }
-        Node* NowNode = head;
-        while (NowNode->Next != nullptr) {
-            std::cout << NowNode->Name << "(값:" << NowNode->Value << ")->";
-            NowNode = NowNode->Next;
-        }
-        std::cout << NowNode->Name << "(값:" << NowNode->Value << ")" << std::endl;
-        return;*/
+    void Print() {  // 연결 리스트 출력   
         if (head == nullptr) {
             std::cout << "리스트 비어 있음" << std::endl;
             return;
@@ -120,6 +109,44 @@ public:
             NowNode = NowNode->Next;
         }
         std::cout << std::endl;
+        return;
+    }
+    void Reverse() // 연결상태 뒤집기 head->node1->node2->...->nodeN-2->tail => tail->nodeN-2->...->node2->node1->head
+    {
+        if (head == nullptr || tail == nullptr)
+        {
+            std::cout << "리스트 비어 있음" << std::endl;
+            return;
+        }
+
+        // 구현 전략
+        // 1) tail가 next인 노드 찾기
+        // 2) tail과 head를 서로 변경
+        // 3) 찾은 노드를 새로운 head의 next로 변경
+        // 3) node1의 next가 tail이 될 때까지 반복
+        
+        Node* NowNode = head;
+        Node* TargetNode = head;
+        while (NowNode->Next != tail && NowNode != nullptr)
+        {
+            NowNode = NowNode->Next;
+        }        
+        Node* StartNode = tail;
+        Node* EndNode = head;
+        head = StartNode;
+        tail = EndNode;
+
+        head->Next = NowNode;        
+        
+        while (NowNode != tail && NowNode != nullptr)
+        {                            
+            while (TargetNode->Next != NowNode)
+            {
+                TargetNode = TargetNode->Next;
+            }
+            Search(TargetNode->Name);
+            NowNode->Next = target;
+        }
         return;
     }
 };
@@ -246,6 +273,8 @@ int main()
     List1.Insert("노드2", "노드3", 3);
     List1.Insert("노드3", "노드4", 4);
     List1.Print();
+    List1.Reverse();
+    List1.Print();
 
     Double_List dList1;
     dList1.Insert_Head("노드1", 10);
@@ -262,105 +291,4 @@ int main()
     dList1.Print();
 }
 
-
-/*
-
-주요 연산
-    - 삽입(Insert)
-        - 처음, 중간, 끝에 삽입
-        - 시간복잡도
-            - O(1) 처음
-            - O(n) 중간
-            - 끝(구현에 따라 다름 O(1), O(n))
-    - 삭제(Delete)
-        - 특정 노드 삭제
-        - 시간복잡도
-            - O(1) 처음, 끝 (Tail 정보가 있으면)
-            - O(n) 중간
-    - 탐색(Find or Search)
-        - 값 또는 위치로 찾기
-        - 시간 복잡도
-            - O(n)
-    - 순회
-        - 시간복잡도
-            - O(n)
-    - 배열과 달리 인덱스로 접근이 불가능하며, 순차 탐색이 필요함
-
-링크드 리스트의 장단점
-    - 장점
-        - 동적 메모리 할당 가능(크기 고정이 아님)
-        - 삽입/삭제가 빠름(배열처럼 이동 필요 없음)
-    - 단점
-        - 임의 접근 불가(랜덤 접근 불가능)
-        - 캐시 효율성이 낮음(배열대비)
-
-배열 vs 리스트
-    - 배열과 리스트를 순회하면 뭐가 더 빠른가?
-        - 배열은 연속적인 메모리이고, 리스트는 비연속적인 메모리 이기 때문에 배열이 더 빨리 순회를 할 수 있습니다.
-    - 뭔가 데이터를 찾는다면 뭐가 더 빠른가?
-        - 배열이 빠름
-    - 뭔가 데이터를 삭제하는 것은 뭐가 더 빠른가?
-        - 뭔가 데이터를 찾고 삭제를 한다
-            - 
-    - 데이터 삽입
-        - 리스트의 삭제 시간복잡도는 O(1)
-        - 배열의 삭제 시간복잡도는 O(N)
-
-배열 vs 리스트 기본 개념 비교
-    - 메모리 저장 방식
-        - 동적 배열
-            - 연속된 메모리 공간에 저장
-        - 링크드 리스트
-            - 불연속적인 메모리 공간에 저장
-    - 요소 접근 방식
-        - 동적 배열
-            - 인덱스를 통한 임의 접근이 가능
-        - 링크드 리스트
-            - 순차 접근 필요
-    - 삽입/삭제 성능
-        - 동적 배열
-            - 중간 삽입/삭제 시 비효율적
-        - 링크드 리스트
-            - 중간 삽입/삭제가 효율적
-    - 메모리 사용
-        - 동적 배열
-            - 연속된 메모리
-            - 데이터만 저장
-        - 링크드 리스트
-            - 불연속 메모리
-            - 데이터 + 포인터 저장 메모리 오버헤드가 있음
-    
-연산 성능 비교
-    - 접근
-        - 동적 배열
-            - O(1)
-        - 링크드 리스트
-            - O(n)
-    - 끝에 삽입
-            - 동적 배열
-                - O(1)
-            - 링크드 리스트
-                - Tail 유무에 따라 O(n), O(1)
-    - 중간 삽입
-            - 동적 배열
-                - O(n), 데이터 이동 필요
-            - 링크드 리스트
-                - O(1), 노드 생성 및 포인터 조정
-    - 삭제
-            - 동적 배열
-                - O(n), 데이터 이동 필요
-            - 링크드 리스트
-                - O(1), 노드 생성 및 포인터 조정
-    - 메모리 재할당
-        - 동적 배열
-            - 용량 초과시 필요
-        - 링크드 리스트
-            - 필요 없음
-    - 캐시 성능
-        - 동적 배열
-            - 연속 메모리이기 때문에 좋음
-        - 링크드리스트
-            - 불연속 메모리이기 때문에 나쁨
-
-*/
 
